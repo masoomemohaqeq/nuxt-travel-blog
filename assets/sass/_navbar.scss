@@ -1,0 +1,102 @@
+$navbar-padding: 1.5rem;
+$navbar-divider: 1px solid lightgray;
+
+.navbar-brand img {
+  width: 250px;
+}
+
+.navbar-collapse,
+.dropdown-menu {
+  background-color: rgb(246, 246, 246);
+}
+
+.navbar > [class|="container"] {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.navbar > [class|="container"] {
+  & > a,
+  & > button {
+    padding-left: $navbar-padding;
+    padding-right: $navbar-padding;
+  }
+}
+
+.navbar-nav {
+  &:first-child {
+    border-top: $navbar-divider;
+  }
+
+  & > li {
+    border-bottom: $navbar-divider;
+    a {
+      display: inline-block;
+      padding-left: $navbar-padding;
+      padding-right: $navbar-padding;
+      border-top: 1px solid transparent;
+      &:hover {
+        border-top-color: black;
+      }
+    }
+  }
+}
+
+.dropdown-toggle::after {
+  top: 15px;
+  position: absolute;
+  right: 1.5rem;
+  border: 0;
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  content: "\f078";
+  font-size: x-small;
+}
+
+@media (min-width: map-get($grid-breakpoints,md)) {
+  .navbar .container {
+    margin: auto 0;
+  }
+}
+
+@media (min-width: map-get($grid-breakpoints,lg)) {
+  .navbar-collapse,
+  .navbar-nav:first-child {
+    gap: 0.75rem;
+  }
+
+  .navbar-collapse {
+    background-color: white;
+  }
+
+  .navbar > [class|="container"] {
+    padding-left: auto;
+    padding-right: auto;
+  }
+
+  .navbar > [class|="container"] > * {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .navbar-nav:first-child,
+  .navbar-nav li {
+    border: 0;
+  }
+
+  .dropdown-toggle::after {
+    right: -10px;
+    left: auto;
+  }
+}
+
+@media (min-width: map-get($grid-breakpoints,xl)) {
+  .navbar-collapse,
+  .navbar-nav:first-child {
+    gap: 1rem;
+  }
+
+  .navbar-brand img {
+    width: auto;
+  }
+}

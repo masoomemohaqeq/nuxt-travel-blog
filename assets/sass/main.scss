@@ -1,0 +1,58 @@
+// Custom.scss
+// Option B: Include parts of Bootstrap
+
+// 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
+@import "../../node_modules/bootstrap/scss/functions";
+
+// 2. Include any default variable overrides here
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px,
+  xxl: 1140px,
+);
+
+$primary: #feef58;
+$secondary: #1e356c;
+
+$btn-padding-y: 0.475rem;
+
+$btn-border-radius: 0;
+$input-border-radius: 0;
+
+// 3. Include remainder of required Bootstrap stylesheets (including any separate color mode stylesheets)
+@import "../../node_modules/bootstrap/scss/variables";
+@import "../../node_modules/bootstrap/scss/variables-dark";
+
+$custom-colors: (
+  tertiary: #021b2b,
+);
+
+$theme-colors: map-merge($theme-colors, $custom-colors);
+
+$custom-font-sizes: (
+  7: 0.8rem,
+  8: 0.6rem,
+);
+
+$font-sizes: map-merge($font-sizes, $custom-font-sizes);
+
+$input-focus-box-shadow: none;
+$card-border-radius: 0;
+
+@import "../../node_modules/bootstrap/scss/bootstrap.scss";
+// 8. Add additional custom code here
+
+@import "./navbar";
+.px-sm-2 {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+@media (min-width: map-get($grid-breakpoints,md)) {
+  .px-sm-2 {
+    padding-left: auto;
+    padding-right: auto;
+  }
+}
