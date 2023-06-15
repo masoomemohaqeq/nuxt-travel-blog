@@ -1,22 +1,29 @@
 <template>
+  <Head>
+    <Title>Travel | {{ post.title }}</Title>
+    <Meta name="description" :content="post.brief" />
+  </Head>
   <div class="container px-sm-2">
-    <div class="fw-bold display-3 my-5 text-center">
-      {{ post.title }}
-    </div>
-    <div
-      class="border border-start-0 border-end-0 fs-7 py-2 d-flex flex-wrap gap-2 justify-content-center"
-    >
-      <span>By {{ post.author }} |</span> <span>{{ post.date }} |</span>
-      <span>Categories: {{ post.category }} |</span>
-      <span>{{ comments.length }} Comments</span>
-    </div>
-    <div>
-      <img class="w-100 my-4" :src="post.image" :alt="post.title" />
-      {{ post.body }}
+    <Error v-if="errorMsg !== ''" :text="errorMsg" />
+    <div v-else>
+      <div class="fw-bold display-3 my-5 text-center">
+        {{ post.title }}
+      </div>
+      <div
+        class="border border-start-0 border-end-0 fs-7 py-2 d-flex flex-wrap gap-2 justify-content-center"
+      >
+        <span>By {{ post.author }} |</span> <span>{{ post.date }} |</span>
+        <span>Categories: {{ post.category }} |</span>
+        <span>{{ comments.length }} Comments</span>
+      </div>
+      <div>
+        <img class="w-100 my-4" :src="post.image" :alt="post.title" />
+        {{ post.body }}
+      </div>
     </div>
 
     <div class="my-5">
-      <h6 class="fw-bold">{{ comments.length }} Comments</h6>
+      <h6 class="fw-bold">{{ commentsRes.length }} Comments</h6>
       <div v-for="comment in comments" :key="comment.value.id">
         <Comment :comment="comment" />
       </div>
@@ -94,21 +101,32 @@ import { CommentService } from "~/dataService/commentService";
 import { PostService } from "~/dataService/postService";
 import { useCommentStore } from "~/stores/comment";
 
+const errorMsg = ref("");
 const { slug } = useRoute().params;
 let id = slug.substr(slug.lastIndexOf("-") + 1, slug.length - 1);
 
 const isLoading = ref(false);
-// const reply = ref(null);
 const newComment = ref(null);
 
 const postService = new PostService();
 const commentService = new CommentService();
 
-const response = await postService.getById(id);
-const post = response.data;
+let post = [];
+try {
+  errorMsg.value = "";
+  const response = await postService.getById(id);
+  post = response.data;
+} catch (error) {
+  console.error(error);
+  if ((error.code = 404)) {
+    showError({ statusCode: 404, statusMessage: "Page Not Found" });
+  }
+  errorMsg.value = error.message;
+}
 
 const commentStore = useCommentStore();
 let comments = [];
+let commentsRes = [];
 
 const commentOp = {
   clear: function () {
@@ -149,7 +167,7 @@ const commentOp = {
   },
   getComments: async function () {
     const comResponse = await commentService.getPostComments(id);
-    let commentsRes = comResponse.data;
+    commentsRes = comResponse.data;
     comments = [...buildHierarchy(commentsRes)];
   },
 };

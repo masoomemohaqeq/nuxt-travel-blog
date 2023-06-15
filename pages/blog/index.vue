@@ -1,7 +1,13 @@
 <template>
+  <Head>
+    <Title>Travel | Blog</Title>
+    <Meta name="description" content="My app description" />
+  </Head>
   <div class="container px-sm-2">
     <div class="fw-bold display-3 my-5 text-center">LATESTS BLOG POSTS</div>
     <div class="d-grid gap-5">
+      <Error :text="errorMsg" v-if="errorMsg" />
+
       <div class="row" v-for="post in paginatedPosts" :key="post.id">
         <div class="col-md-4 my-2">
           <NuxtLink :to="urlGenerator.blogPost(post.title, post.id)">
@@ -59,18 +65,24 @@ import { urlGenerator } from "~/helper/urlGenerator";
 
 const postService = new PostService();
 const paginatedPosts = ref([]);
-
+const errorMsg = ref("");
 const isLoading = ref(false);
 
 let paging = {
   pageIndex: 1,
   pageSize: 3,
 };
+let array = [];
 
-const response = await postService.getAll();
-const posts = response.data;
-const array = posts.sort((a, b) => a.id - b.id);
-paginatedPosts.value = [...array.slice(0, paging.pageSize)];
+try {
+  const response = await postService.getAll();
+  const posts = response.data;
+  array = posts.sort((a, b) => a.id - b.id);
+  paginatedPosts.value = [...array.slice(0, paging.pageSize)];
+} catch (error) {
+  console.error(error);
+  errorMsg.value = error.message;
+}
 
 function loadMore() {
   isLoading.value = true;

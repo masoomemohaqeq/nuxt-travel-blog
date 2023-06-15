@@ -15,5 +15,5 @@ export const useCommentStore = defineStore("comment", () => {
     };
   }
   clearReply();
-  return { reply, clearReply, replyComment, replyId };
+  return { reply, clearReply, replyComment };
 });

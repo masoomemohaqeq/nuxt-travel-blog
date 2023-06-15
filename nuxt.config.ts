@@ -4,6 +4,7 @@ export default defineNuxtConfig({
   app: {
     head: {
       title: "Travel",
+      meta: [{ name: "description", content: "Travel website" }],
       link: [
         { rel: "stylesheet", href: "/assets/css/main.min.css" },
         {
