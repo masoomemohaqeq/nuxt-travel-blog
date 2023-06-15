@@ -171,26 +171,21 @@
     <div class="row">
       <div class="col-sm-12 col-md-6 col-lg-4 text-black poplular">
         <h2 class="fw-bold my-5 text-center">Most Viewd</h2>
-        <a href="#">42 Ways Can Make Money and Travel the World</a>
-        <a href="#">Please Help Me Find A Home</a>
-        <a href="#">Please Don’t Be Afraid To Travel On Your Own</a>
-        <a href="#">How I Can Afford My Life Of Constant Travel</a>
-        <a href="#">How Much Money Do You Need To Start A Life Of Travel?</a>
-        <a href="#">Please Help Me Find A Home</a>
+        <div v-for="post in mostViewd" :key="post.id">
+          <NuxtLink :to="'/blog/' + post.title">{{ post.title }}</NuxtLink>
+        </div>
       </div>
       <div class="col-sm-12 col-md-6 col-lg-4 text-black poplular">
         <h2 class="fw-bold my-5 text-center">Most Recent</h2>
-        <a href="#">42 Ways Can Make Money and Travel the World</a>
-        <a href="#">Please Help Me Find A Home</a>
-        <a href="#">Most Scenic Villages in Germany </a>
-        <a href="#">Please Help Me Find A Home</a>
-        <a href="#">Two Weeks in Kyoto: Everything You Need to Know</a>
-        <a href="#">Please Help Me Find A Home</a>
+        <div v-for="post in mostRecent" :key="post.id">
+          <NuxtLink :to="'/blog/' + post.title">{{ post.title }}</NuxtLink>
+        </div>
       </div>
       <div class="col-sm-12 col-md-6 col-lg-4 text-black poplular">
-        <h2 class="fw-bold my-5 text-center">Most Recent</h2>
-        <a href="#">Most Scenic Villages in Germany </a>
-        <a href="#">Please Help Me Find A Home</a>
+        <h2 class="fw-bold my-5 text-center">Hightlights</h2>
+        <div v-for="post in highlights" :key="post.id">
+          <NuxtLink :to="'/blog/' + post.title">{{ post.title }}</NuxtLink>
+        </div>
       </div>
     </div>
   </div>
@@ -206,7 +201,34 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { PostService } from "../dataService/postService";
+const service = new PostService();
+
+const response = await service.getAll();
+const posts = response.data;
+
+const mostViewd = posts
+  .sort((a, b) => {
+    return b.views - a.views;
+  })
+  .slice(0, 6);
+
+const mostRecent = posts
+  .sort((a, b) => {
+    const aDate = new Date(a.date);
+    const bDate = new Date(b.date);
+
+    return bDate - aDate;
+  })
+  .slice(0, 6);
+
+const highlights = posts
+  .sort((a, b) => {
+    return b.views - a.views;
+  })
+  .slice(0, 3);
+</script>
 
 <style lang="scss" scoped>
 .hero {

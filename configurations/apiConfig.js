@@ -1,3 +1,3 @@
-export default apiConfig = {
-  url: "http://localhost:3000/",
+export const apiConfig = {
+  url: "http://localhost:3000",
 };
