@@ -12,7 +12,8 @@
       <div
         class="border border-start-0 border-end-0 fs-7 py-2 d-flex flex-wrap gap-2 justify-content-center"
       >
-        <span>By {{ post.author }} |</span> <span>{{ post.date }} |</span>
+        <span>By {{ post.author }} |</span>
+        <span>{{ toShortDate(post.date) }} |</span>
         <span>Categories: {{ post.category }} |</span>
         <span
           >{{ comments.length }}
@@ -101,6 +102,8 @@
 import { nanoid } from "nanoid";
 
 import buildHierarchy from "~/helper/hierachy";
+import { toShortDate } from "~/helper/date";
+
 import { CommentService } from "~/dataService/commentService";
 import { PostService } from "~/dataService/postService";
 import { useCommentStore } from "~/stores/comment";
@@ -123,7 +126,6 @@ try {
   const response = await postService.getById(id);
   post = response.data;
 } catch (error) {
-  console.error(error);
   if ((error.code = 404)) {
     showError({ statusCode: 404, statusMessage: "Page Not Found" });
   }
@@ -160,7 +162,7 @@ const commentOp = {
     try {
       const res = await commentService.create(newComment.value);
 
-      await this.getComments();
+      await this.get();
       setTimeout(() => {
         isLoading.value = false;
         this.clear();
@@ -171,10 +173,11 @@ const commentOp = {
       isLoading.value = false;
     }
   },
-  getComments: async function () {
+  get: async function () {
     try {
       const comResponse = await commentService.getPostComments(id);
       commentsRes = comResponse.data;
+
       comments = [...buildHierarchy(commentsRes)];
     } catch (error) {
       getCommentsErrorMsg.value = error;
@@ -185,7 +188,7 @@ const commentOp = {
 async function init() {
   commentStore.clearReply();
   commentOp.clear();
-  await commentOp.getComments();
+  await commentOp.get();
 }
 
 await init();

@@ -7,7 +7,7 @@
       <div class="col-10">
         <div>
           <span class="text-info me-1">{{ comment.value.name }}</span>
-          <span class="fs-7 me-1">{{ comment.value.date }}</span>
+          <span class="fs-7 me-1">{{ toLongDate(comment.value.date) }}</span>
           <a
             href="#addComment"
             class="btn text-info fs-7"
@@ -33,6 +33,7 @@
 
 <script setup>
 import { useCommentStore } from "~/stores/comment";
+import { toLongDate } from "~/helper/date";
 
 defineProps(["comment"]);
 

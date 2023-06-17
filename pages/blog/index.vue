@@ -31,7 +31,8 @@
           <div
             class="border border-start-0 border-end-0 fs-7 py-2 d-flex flex-wrap gap-2"
           >
-            <span>By {{ post.author }} |</span> <span>{{ post.date }} |</span>
+            <span>By {{ post.author }} |</span>
+            <span>{{ toShortDate(post.date) }} |</span>
             <span>Categories: {{ post.category }} |</span>
             <span>{{ post.comments }} Comments |</span>
             <NuxtLink
@@ -62,6 +63,7 @@
 <script setup>
 import { PostService } from "~/dataService/postService";
 import { urlGenerator } from "~/helper/urlGenerator";
+import { toShortDate } from "~/helper/date";
 
 const postService = new PostService();
 const paginatedPosts = ref([]);
