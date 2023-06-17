@@ -1,28 +1,29 @@
-import axios from "axios";
+export const axiosResponseHandler = (response) => {
+  console.log("axiosResponseHandler");
+  return response;
+};
 
-axios.interceptors.response.use(
-  function (response) {
-    return response;
-  },
-  function (error) {
-    debugger;
-    let errorMsg = "Sorry something went wrong.";
-    if (error.response) {
-      console.log(error.response.data);
-      console.log(error.response.status);
-      console.log(error.response.headers);
+export const axiosErrorHandler = (error) => {
+  console.log("axiosErrorHandler");
 
-      errorMsg = "Sorry something went wrong. please try again";
-    } else if (error.request) {
-      console.log(error.request);
+  let errorMsg = "Sorry something went wrong.";
+  if (error.response) {
+    console.log(error.response.data);
+    console.log(error.response.status);
+    console.log(error.response.headers);
 
-      errorMsg = "Sorry something went wrong. sever error.";
-    } else {
-      console.log("Error", error.message);
+    errorMsg = "Sorry something went wrong. please try again";
+    if (error.response.status === 404) {
+      errorMsg = "Not Found";
     }
-    console.log(error.config);
+  } else if (error.request) {
+    console.log(error.request);
 
-    // throw new Error(errorMsg);
-    return Promise.reject(errorMsg);
+    errorMsg = "Sorry something went wrong. sever error.";
+  } else {
+    console.log("Error", error.message);
   }
-);
+  console.log(error.config);
+
+  return Promise.reject(errorMsg);
+};

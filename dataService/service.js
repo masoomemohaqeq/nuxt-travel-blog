@@ -1,31 +1,15 @@
 import axios from "axios";
 import { apiConfig } from "~/configurations/apiConfig";
+import { axiosResponseHandler, axiosErrorHandler } from "~/helper/axios";
 
-// axios.interceptors.response.use(
-//   function (response) {
-//     return response;
-//   },
-//   function (error) {
-//     let errorMsg = "Sorry something went wrong.";
-//     if (error.response) {
-//       console.log(error.response.data);
-//       console.log(error.response.status);
-//       console.log(error.response.headers);
-
-//       errorMsg = "Sorry something went wrong. please try again";
-//     } else if (error.request) {
-//       console.log(error.request);
-
-//       errorMsg = "Sorry something went wrong. sever error.";
-//     } else {
-//       console.log("Error", error.message);
-//     }
-//     console.log(error.config);
-
-//     // throw new Error(errorMsg);
-//     return Promise.reject(errorMsg);
-//   }
-// );
+axios.interceptors.response.use(
+  function (response) {
+    return axiosResponseHandler(response);
+  },
+  function (error) {
+    return axiosErrorHandler(error);
+  }
+);
 
 export class Services {
   constructor(controller) {

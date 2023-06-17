@@ -14,7 +14,10 @@
       >
         <span>By {{ post.author }} |</span> <span>{{ post.date }} |</span>
         <span>Categories: {{ post.category }} |</span>
-        <span>{{ comments.length }} Comments</span>
+        <span
+          >{{ comments.length }}
+          <a href="#comments" class="text-info">Comments</a></span
+        >
       </div>
       <div>
         <img class="w-100 my-4" :src="post.image" :alt="post.title" />
@@ -22,8 +25,9 @@
       </div>
     </div>
 
-    <div class="my-5">
+    <div class="my-5" id="comments">
       <h6 class="fw-bold">{{ commentsRes.length }} Comments</h6>
+      <Error v-if="getCommentsErrorMsg" :text="getCommentsErrorMsg" />
       <div v-for="comment in comments" :key="comment.value.id">
         <Comment :comment="comment" />
       </div>
@@ -102,6 +106,8 @@ import { PostService } from "~/dataService/postService";
 import { useCommentStore } from "~/stores/comment";
 
 const errorMsg = ref("");
+const getCommentsErrorMsg = ref("");
+
 const { slug } = useRoute().params;
 let id = slug.substr(slug.lastIndexOf("-") + 1, slug.length - 1);
 
@@ -166,19 +172,23 @@ const commentOp = {
     }
   },
   getComments: async function () {
-    const comResponse = await commentService.getPostComments(id);
-    commentsRes = comResponse.data;
-    comments = [...buildHierarchy(commentsRes)];
+    try {
+      const comResponse = await commentService.getPostComments(id);
+      commentsRes = comResponse.data;
+      comments = [...buildHierarchy(commentsRes)];
+    } catch (error) {
+      getCommentsErrorMsg.value = error;
+    }
   },
 };
 
-async function onLoad() {
+async function init() {
   commentStore.clearReply();
   commentOp.clear();
   await commentOp.getComments();
 }
 
-await onLoad();
+await init();
 </script>
 
 <style lang="scss" scoped></style>
